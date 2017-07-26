@@ -7,17 +7,47 @@ use Log;
 
 class WechatController extends Controller
 {
+    private $wechat;
+    public function __construct()
+    {
+        $this->wechat = app('wechat');
+    }
 
     public function serve()
     {
     	Log::info('request arrived');
-    	$wechat = app('wechat');
-    	$wechat->server->setMessageHandler(function($message){
+          $menu = self::setMenu();
+    	$this->wechat->server->setMessageHandler(function($message){
     		return "欢迎关注柚子养老";
     	});
 
     	Log::info('return response.');
 
-    	return $wechat->server->serve();
+    	return $this->wechat->server->serve();
+    }
+    public function setMenu()
+    {
+        $menu = $this->wechat->menu;
+        $buttons = [
+            [
+                "name"       => "扫码",
+                "sub_button" => [
+                    [
+                        "type" => "scancode_waitmsg",
+                        "name" => "扫码带提示",
+                        "key": "rselfmenu_0_0", 
+                        "sub_button": [ ]
+                    ],
+                    [
+                    "type" => "scancode_push",
+                        "name" => "扫码推事件",
+                        "key": "rselfmenu_0_1", 
+                        "sub_button": [ ]
+                    ] 
+                ],
+            ],
+        ];
+        $menu->add($buttons);
+        
     }
 }
