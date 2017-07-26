@@ -8,24 +8,31 @@ use Log;
 
 class WechatController extends Controller
 {
-    private $wechat;
-    public function __construct()
-    {
-        $this->wechat = app('wechat');
-    }
 
     public function serve()
     {
-    	Log::info('request arrived');
-        $menu = self::setMenu();
-
-    	$this->wechat->server->setMessageHandler(function($message){
-    		return "欢迎关注柚子养老";
-    	});
-
-    	Log::info('return response.');
-
-    	return $this->wechat->server->serve();
+        $wechat = app('wechat');
+        $wechat->server->setMessageHandler(function($message) {
+            switch ($message->MsgType) {
+                case 'event':
+                    if($message->Event == 'subscribe')
+                    {
+                        return "欢迎关注骑乐马术俱乐部！1";
+                    }else if($message->Event == 'unsubscribe'){
+                        return "欢迎关注骑乐马术俱乐部！2";
+                    }else{
+                        return "欢迎关注骑乐马术俱乐部！3";
+                    }
+                    break;
+                case 'text':
+                    return "欢迎关注骑乐马术俱乐部！4";
+                    break;
+                default:
+                    return '欢迎关注骑乐马术俱乐部！5';
+                    break;
+            }
+        });
+        return $wechat->server->serve();
     }
     public function setMenu()
     {
