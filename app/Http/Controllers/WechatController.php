@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use EasyWeChat\Message\Text;
 use Log;
 
 class WechatController extends Controller
@@ -16,7 +17,8 @@ class WechatController extends Controller
     public function serve()
     {
     	Log::info('request arrived');
-          $menu = self::setMenu();
+        $menu = self::setMenu();
+
     	$this->wechat->server->setMessageHandler(function($message){
     		return "欢迎关注柚子养老";
     	});
@@ -35,14 +37,12 @@ class WechatController extends Controller
                     [
                         "type" => "scancode_waitmsg",
                         "name" => "扫码带提示",
-                        "key": "rselfmenu_0_0", 
-                        "sub_button": [ ]
+                        "key"=> "rselfmenu_0_0",
                     ],
                     [
                     "type" => "scancode_push",
                         "name" => "扫码推事件",
-                        "key": "rselfmenu_0_1", 
-                        "sub_button": [ ]
+                        "key"=> "rselfmenu_0_1",
                     ] 
                 ],
             ],
